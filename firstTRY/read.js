@@ -13,15 +13,25 @@ http.createServer(function (req, res) {
         else if(ext === '.js'){
             res.writeHead(200, {'Content-Type': 'text/javascript'});
         }
-            res.write(fs.readFileSync(__dirname + pathname, 'utf8'));
+            fs.readFile(__dirname + pathname, 'utf8', function(err, data) {
+            	if(err) throw err;
+            	res.write(data);
+            	res.end();
+
+            });
         }
      else{
             res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write(fs.readFileSync('hello-smarthouse.html', 'utf8'));
+            fs.readFile('hello-smarthouse.html', 'utf8', function(err, data) {
+            	if(err) throw err;
+            	res.write(data);
+            	res.end();
+
+            });
      }
-     res.end();
-  /*   
-  fs.readFile('hello-smarthouse.html', function(err, data) {
+     //res.end();
+     
+ /* fs.readFile('hello-smarthouse.html', function(err, data) {
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.write(data);
     res.end();
