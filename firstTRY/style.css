@@ -1,4 +1,62 @@
 body {
 	font-style: italic;
 	color: red;
+	background-color: #e6e6e6;
+}
+
+
+.washing {
+	width: 500px;
+	height: 500px;
+	margin: 0 auto;
+	background-color: #f9afac;
+	border-radius: 15px;
+	box-shadow: 5px -5px 0px #999;
+	position: relative;
+}
+.panel {
+	width: 100%;
+	height: 100px;
+	background-color: #fff;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+}
+.switch {
+	padding: 4px;
+	margin: 10px;
+	background: #333;
+	color: #fff;
+	display: inline-block;
+	border-radius: 5px;
+}
+.switch.on {
+	background-color: darkgoldenrod;
+}
+.drum {
+	width: 250px;
+	height: 250px;
+	border-radius: 100%;
+	background-color: #676767;
+	position: absolute;
+	left: 50%;
+	bottom: 80px;
+	transform: translateX(-50%);
+}
+.door {
+	width: 250px;
+	height: 250px;
+	border-radius: 100%;
+	background-color: rgba(255,255,255,.4);
+	position: absolute;
+	left: -5px;
+	right: -5px;
+	top: -5px;
+	bottom: -5px;
+	border: 5px solid #000;
+}
+.door.open {
+	transform: translateX(-100%);
 }
