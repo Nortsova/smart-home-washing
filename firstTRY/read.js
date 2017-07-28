@@ -3,16 +3,25 @@ var fs = require('fs');
 var url = require('url');
 var path = require('path');
 var mimeTypes = {
+<<<<<<< HEAD
 	'.js': 'text/javascript',
 	'.html': 'text/html',
 	'.css': 'text/css',
 	'.jpg': 'image/jpeg',
 	'.png': 'image/png'
 
+=======
+    '.js': 'text/javascript',
+    '.html': 'text/html',
+    '.css': 'text/css',
+    '.jpg': 'image/jpeg',
+    '.png': 'image/png'
+>>>>>>> 71bdf5b1398244597b1a880cb5ba58fca601315d
 };
 
 
 http.createServer(function (req, res) {
+<<<<<<< HEAD
 	var pathname = url.parse(req.url).path;
 	var ext = path.extname(pathname);
 
@@ -70,3 +79,35 @@ http.createServer(function (req, res) {
     res.end();
   });*/
 }).listen(8080);
+=======
+	var pathname = url.parse(req.url).pathname;
+	
+    if(pathname == '/') {
+        pathname = '/index.html'
+    }
+
+    var ext = path.extname(pathname);
+    
+    var mimeType = mimeTypes[ext];
+    pathname = pathname.substring(1, pathname.length);
+
+    if((ext == ".png") || (ext == ".jpg")) {
+        fs.readFile('./' + pathname, function(err, data) {
+            res.writeHead(200, {'Content-Type': mimeType});
+            res.end(data, 'binary');
+        });
+        
+    } else {
+        fs.readFile(pathname, 'utf8', function(err, data) {
+            res.writeHead(200, {'Content-Type': mimeType});
+            res.end(data);
+        });
+    }
+
+
+
+    
+
+}).listen(8080);
+
+>>>>>>> 71bdf5b1398244597b1a880cb5ba58fca601315d
