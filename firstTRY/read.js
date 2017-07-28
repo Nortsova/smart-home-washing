@@ -16,12 +16,14 @@ var mimeTypes = {
 http.createServer(function (req, res) {
     if(req.method == "GET") {
     	var pathname = url.parse(req.url).path;
-    	var ext = path.extname(pathname);
+    	
 
     	if(pathname == '/') {
     		pathname = '/index.html';
     	}
 
+        var ext = path.extname(pathname);
+        
     	var mimeType = mimeTypes[ext];
     	pathname = pathname.substr(1);
 
