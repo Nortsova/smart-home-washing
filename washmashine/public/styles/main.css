@@ -30,6 +30,24 @@ body {
 	display: inline-block;
 	border-radius: 5px;
 }
+#welc {
+	width: 500px;
+	position:relative;
+	/*text-align: center;*/
+	margin:auto;
+
+}
+#logOut {
+	padding: 4px;
+	
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	background: #333;
+	color: #fff;
+	display: inline-block;
+	border-radius: 5px;
+}
 .switch.on {
 	background-color: darkgoldenrod;
 }

@@ -1,24 +1,21 @@
-
 let express = require('express');
-//let json = require('express-json');
 let bodyParser = require('body-parser');
 let fs = require("fs");
 let path = require("path");
-
+let url = require("url");
 
 let app = express();
 
 
 app.use(express.static(__dirname + '/public'));
-console.log(__dirname + '/public');
+//console.log(__dirname + '/public');
 
-//let json = require("./data.json")
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-
-app.get('/', function (req, res){
+app.get('/', (req, res) =>{
 	let path = __dirname + '/public';
+
 	let htmlHead = '<!DOCTYPE html><html lang="en">' +
 				'<head>' +
 				'<meta charset="UTF-8">' +
@@ -26,27 +23,32 @@ app.get('/', function (req, res){
 				'<link rel="stylesheet" type="text/css" href="/styles/main.css">'+
 				'</head> ' +
 				'<body>';
-	let htmlBody = '<div id = "welc" class="text-center"><h2>Hello, SMARTHOUSE!!</h2></div>' +
-					'<div class="washing">'+
+				
+
+	let htmlBody = '<div class="washing">'+
 					'<div class="panel">'+
-					'<a href="/on" id="switch" class="switch on">on/off</a>'+
+					'<button id="switch" class="switch">on/off</button>'+
 					'</div>'+
-					'<div class="drum open">'+
+					'<div id="divToOpen" class="drum open">'+
 					'<div id="door" class="door "></div>'+
 					'</div>'+
 					'</div>'+
 					'</br>';
+
 	let htmlEnding = '<script type="text/javascript" src="/script.js">'+'</script>'+
 					'</body>'+
 					'</html>';
 
-	let htmlForm = '<div id="formDiv"><form id="nameForm" class="form text-center" action="/" method="post">'+
-				'<input type="text" name="userName" placeholder="User Name">'+
+	let htmlForm = ['<div id="formDiv"',' style="display:none"','><form id="nameForm" class="form text-center" action="/" method="post">'+
+				'<input type="text" name="userName" placeholder="User Name" required>'+
 				'<input class="btn" type="submit" value="Submit">'+
-				'</form></div>';
+				'</form></div>'];
+
+	let logOutButton = ['<div id = "welc" class="text-center"><h2>Hello, SMARTHOUSE!</h2>'+
+					'<button id="logOut"',' style="display:none"','>Log out</button></div>'];
     
 
-	fs.readFile('./data.json', function(err, data) {
+	fs.readFile('./data.json', (err, data) => {
 		if(err) {
 			console.log("err");
 			return;
@@ -54,113 +56,104 @@ app.get('/', function (req, res){
 		let info = JSON.parse(data);
 
 		if(info.owner != "") {
-			res.send(htmlHead + "<h1 class='text-center'>Welcome, " + info.owner + "</h1>" +  htmlBody + htmlEnding);
+			
+				res.send(htmlHead + '<h1 id="welcOnLoad" class="text-center">Welcome, ' + info.owner + '</h1>' +  logOutButton[0] + logOutButton[2]  + htmlForm[0] + htmlForm[1] + htmlForm[2] + htmlBody + htmlEnding);
+			
 		}
 		else {
-			res.send(htmlHead +htmlForm + htmlBody + htmlEnding);
+			res.send(htmlHead + logOutButton[0] + logOutButton[1] + logOutButton[2] + htmlForm[0] + htmlForm[2] + htmlBody + htmlEnding);
 		}
 		
 	});
-	
 
 });
 
-/*app.get('/on', function(req, res)  {
+
+app.post('/', (req, res) =>  {
 	
-})*/
-
-app.post('/', function(req, res)  {
-	//let userName = req.body.userName;
-	//let html = 'Hi: ' + userName + '</br> User is saved';
-
-	/*let user = {
-		owner: userName
-	}*/
-	//console.log(req.body);
-
-	fs.readFile('./data.json', function(err, data)  {
+	fs.readFile('./data.json', (err, data) =>  {
 		if(err) {
 			console.log("err");
 			return;
 		}
 		let info = JSON.parse(data);
+		if(req.body.userName != null) {
+			
 
-		info.owner = req.body.userName;
-		console.log(info);
-		
-		saveUser(info, function(err)  {
-			if(err) {
-				res.status(404).send('User is not saved');
-				return;
-			}
-			//res.send(html);
-			console.log("User is successfully saved");
-			//res.status(200);
+			info.owner = req.body.userName;
+			console.log(info);
+
+			saveSettings(info, callBack());
+				
 			res.send({ status: 'SUCCESS', userN: info.owner });
-			//res.end();
-
-		
-		
-		}); 
+				
+			
+		} else if(req.body.on != null) {
+			if(!info.owner) {
+				res.send({notLogged: true});
+			} else {
+				console.log( info.on);
+				console.log( req.body.on);
+				changeOnOff(info);
+			}
+			
+		} else if(req.body.needToUpgr) {
+			//console.log(typeof req.body.needToUpgr);
+			let jsonToSend = {};
+			if(info.on) {
+				//res.send({status: 'success', haveToTurn: 'on'})
+				jsonToSend.status = 'success';
+				jsonToSend.haveToTurn = 'on';
+			} else
+			{
+				jsonToSend.status = 'success';
+				jsonToSend.haveToTurn = 'off';
+				//res.send({status: 'success', haveToTurn: 'off'});
+			}
+			res.send(jsonToSend);
+			
+				
+			
+		} else if(req.body.logOut) {
+			info.owner = "";
+			saveSettings(info, callBack());
+			res.send({status: 'ok'})
+		}
 
 	});
+
+	function changeOnOff(info) {
+		if(info.on && req.body.on) {
+			console.log("have to turn off");
+			info.on = false;
+			res.send({status: 'success', haveToTurn: 'off'});
+		} else if (!info.on && !req.body.on) {
+			console.log("have to turn on");
+			info.on = true;
+			res.send({status: 'success', haveToTurn: 'on'});
+		}
+
+		saveSettings(info, callBack());
+	}
+
+
 
 
 });
 
-
-app.get('/data', function(req, res) {
-	
-	fs.readFile('data.json', function(err, data) {
+function callBack() {
+	return function(err) {
 		if(err) {
-			res.status(404).send('Not found');
+			res.status(404).send('User data is not saved');
 			return;
 		}
-
-		json = JSON.parse(data);
-
-		res.send(json.owner);
-	});
+		console.log("User data is successfully saved");
+	}
+}
 
 
-
-	
-	
-})
-
-app.post("/on", (req, res) => {
-	fs.readFile('./data.json', function(err, data)  {
-		if(err) {
-			console.log("err");
-			return;
-		}
-		let info = JSON.parse(data);
-		console.log(req.status.on);
-		// if(info.on && req.) {
-
-		// }
-		//info.on = req.body.userName;
-		//console.log(info);
-		
-		/*saveUser(info, function(err)  {
-			if(err) {
-				res.status(404).send('User is not saved');
-				return;
-			}
-			//res.send(html);
-			console.log("User is successfully saved");
-			//res.status(200);
-			res.send({ status: 'SUCCESS', userN: info.owner });
-			//res.end();
-
-		
-		
-		}); */
-
-	});
-})
-function saveUser(user, callback) {
-	fs.writeFile('./data.json', JSON.stringify(user), callback);
+function saveSettings(settings, callback) {
+	fs.writeFile('./data.json', JSON.stringify(settings), callback);
 }
 
 app.listen(8080);
