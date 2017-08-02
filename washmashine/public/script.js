@@ -13,7 +13,7 @@ function FormDataToJSON(FormElement){
 }
 if(form != null) {
 	form.onsubmit = function(e) {
-		//e.preventDefault();
+		e.preventDefault();
 		let data = JSON.stringify(FormDataToJSON(form));
 		fetch("./",
 		{
