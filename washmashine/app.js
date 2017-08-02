@@ -8,12 +8,13 @@ let app = express();
 
 
 app.use(express.static(__dirname + '/public'));
+//app.use('/main', express.static('public'));
 //console.log(__dirname + '/public');
 //app.use(express.bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 //let path = __dirname + '/public';
-
+/*
 let htmlHead = '<!DOCTYPE html><html lang="en">' +
 				'<head>' +
 				'<meta charset="UTF-8">' +
@@ -44,12 +45,12 @@ let htmlForm = ['<div id="formDiv"',' style="display:none"','><form id="nameForm
 				'value="Submit"></form></div>'];
 
 let logOutButton = ['<div id = "welc" class="text-center"><h2>Hello, SMARTHOUSE!</h2>'+
-				'<button id="logOut"',' style="display:none"','>Log out</button></div>'];
+				'<button id="logOut"',' style="display:none"','>Log out</button></div>'];*/
 
 app.get('/', (req, res) =>{
 	/*let path = __dirname + '/public';*/
 
-	/*let htmlHead = '<!DOCTYPE html><html lang="en">' +
+	let htmlHead = '<!DOCTYPE html><html lang="en">' +
 				'<head>' +
 				'<meta charset="UTF-8">' +
 				'<title>Smart-house</title>' +
@@ -73,13 +74,13 @@ app.get('/', (req, res) =>{
 					'</html>';
 
 	let htmlForm = ['<div id="formDiv"',' style="display:none"','><form id="nameForm"' + 
-					'class="form text-center" action="/main" onsubmit="formSubmit()"' + 
+					'class="form text-center" action="/" ' + 
 					'method="post"><input type="text" id="Uname" name="userName"' +
 					'placeholder="User Name" required><input class="btn" type="submit"' + 
 					'value="Submit"></form></div>'];
 
 	let logOutButton = ['<div id = "welc" class="text-center"><h2>Hello, SMARTHOUSE!</h2>'+
-					'<button id="logOut"',' style="display:none"','>Log out</button></div>'];*/
+					'<button id="logOut"',' style="display:none"','>Log out</button></div>'];
     
 
 	fs.readFile('./data.json', (err, data) => {
@@ -104,6 +105,33 @@ app.get('/', (req, res) =>{
 	});
 
 });
+
+/*app.get('/main', (req, res) =>{
+
+
+	fs.readFile('./data.json', (err, data) => {
+		if(err) {
+			console.log("err");
+			return;
+		}
+		let info = JSON.parse(data);
+
+		if(info.owner != "") {
+			
+				res.send(htmlHead + '<h1 id="welcOnLoad" class="text-center">Welcome, ' + 
+						info.owner + '</h1>' +  logOutButton[0] + logOutButton[2]  + 
+						htmlForm[0] + htmlForm[1] + htmlForm[2] + htmlBody + htmlEnding);
+			
+		}
+		else {
+			res.send(htmlHead + logOutButton[0] + logOutButton[1] + logOutButton[2] +
+			 htmlForm[0] + htmlForm[2] + htmlBody + htmlEnding);
+		}
+		
+	});
+
+});
+
 
 app.post('/main', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
@@ -141,7 +169,7 @@ app.post('/main', (req, res) => {
 		}
 
 	})
-})
+})*/
 
 app.post('/', (req, res) =>  {
 	
@@ -151,7 +179,7 @@ app.post('/', (req, res) =>  {
 			return;
 		}
 		let info = JSON.parse(data);
-		/*if(req.body.userName != null) {
+		if(req.body.userName != null) {
 			
 
 			info.owner = req.body.userName;
@@ -167,7 +195,7 @@ app.post('/', (req, res) =>  {
 			res.send(json);
 		
 			
-		}*/ if(req.body.on != null) {
+		} else if(req.body.on != null) {
 			if(!info.owner) {
 				res.send({notLogged: true});
 			} else {
@@ -235,4 +263,4 @@ function saveSettings(settings, callback) {
 	fs.writeFile('./data.json', JSON.stringify(settings), callback);
 }
 
-app.listen(9000);
+app.listen(8080);

@@ -12,13 +12,12 @@ function FormDataToJSON(FormElement){
     return ConvertedJSON;
 }
 
-if(form != null) {
-	form.onsubmit = function(e) {
-
-		e.preventDefault();
+let welcome;
+form.onsubmit = function(e) {
+	e.preventDefault();
 		let data = JSON.stringify(FormDataToJSON(form));
 		console.log(data);
-		fetch("/main",
+		fetch("/",
 		{
 			headers: {
 			'Accept': 'application/json',
@@ -36,7 +35,7 @@ if(form != null) {
 				document.getElementById('formDiv').style.display = "none";
 				document.getElementById('welc').style.display = "block";
 				
-				let welcome;
+				//let welcome;
 				let helloSH;
 				if(!check) {
 					welcome = document.createElement("h2");
@@ -46,13 +45,15 @@ if(form != null) {
 					helloSH = document.getElementById('welc');
 					helloSH.appendChild(welcome);
 					check = true;
-				} 
+				} else {
+					welcome.innerHTML = "Welcome, " + data.userN;
+					welcome.style.display = "block";
+				}
 				
 			};
 		})
-	};
+	
 }
-
 let onOff = document.getElementById('switch');
 
 
@@ -151,7 +152,10 @@ logOut.onclick = function(e) {
 			document.getElementById('formDiv').style.display = "block";
 			document.getElementById('Uname').value = "";
 			document.getElementById('logOut').style.display = "none";
-			document.getElementById('welcomeText').style.display = "none";
+			let welcText = document.getElementById('welcomeText');
+			if(welcText) {
+				document.getElementById('welcomeText').style.display = "none";
+			}
 			//document.getElementById('logOut').style.display = "none";
 
 		}
