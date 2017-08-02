@@ -1,7 +1,7 @@
 let form = document.getElementById('nameForm');
 let formDiv = document.getElementById('formDiv');
 window.onload = windLoad();
-let check = false;;
+let check = false;
 function FormDataToJSON(FormElement){    
     var formData = new FormData(FormElement), ConvertedJSON= {};
     for (const [key, value]  of formData.entries())
@@ -11,11 +11,13 @@ function FormDataToJSON(FormElement){
 
     return ConvertedJSON;
 }
-if(form != null) {
-	form.onsubmit = function(e) {
-		//e.preventDefault();
+
+function formSubmit() {
+	return function(e) {
+		e.preventDefault();
 		let data = JSON.stringify(FormDataToJSON(form));
-		fetch("./",
+		console.log(data);
+		fetch("/main",
 		{
 			headers: {
 			'Accept': 'application/json',
@@ -26,8 +28,9 @@ if(form != null) {
 		})
 		.then(function(res){ return res.json(); })
 		.then(function(data){ 
-			if(data.status == "SUCCESS") {
-				//document.getElementById('mashine').style.display = "block";
+			console.log(data);
+			if(data.status == "Ok") {
+
 				document.getElementById('logOut').style.display = "inline-block";
 				document.getElementById('formDiv').style.display = "none";
 				document.getElementById('welc').style.display = "block";
@@ -43,12 +46,10 @@ if(form != null) {
 					helloSH.appendChild(welcome);
 					check = true;
 				} 
-				//let parentEl = helloSH.parentNode;
-				//parentEl.insertBefore(welcome, document.getElementById('welc'));
+				
 			};
 		})
 	};
-
 }
 
 let onOff = document.getElementById('switch');
@@ -68,7 +69,7 @@ function windLoad() {
 		.then(function(res) {return res.json();})
 		.then(function(data) {
 			if(data.status == 'success') {
-				//alert("sc")
+				
 				let door = document.getElementById('divToOpen');
 				let onOff = document.getElementById('switch')
 				if(data.haveToTurn == "off") {
@@ -76,9 +77,7 @@ function windLoad() {
 				   door.classList.add('open');
 				   onOff.classList.remove('on');
 				} else {
-					//alert("s");
-					//let movingDoor = document.getElementById('door');
-					//movingDoor.style.transition = "none";
+					
 					door.classList.remove('open');
 					onOff.classList.add('on');
 				}
@@ -149,6 +148,7 @@ logOut.onclick = function(e) {
 				document.getElementById('welcOnLoad').style.display = "none";
 			}
 			document.getElementById('formDiv').style.display = "block";
+			document.getElementById('Uname').value = "";
 			document.getElementById('logOut').style.display = "none";
 			document.getElementById('welcomeText').style.display = "none";
 			//document.getElementById('logOut').style.display = "none";
