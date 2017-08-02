@@ -12,8 +12,9 @@ function FormDataToJSON(FormElement){
     return ConvertedJSON;
 }
 
-function formSubmit() {
-	return function(e) {
+if(form != null) {
+	form.onsubmit = function(e) {
+
 		e.preventDefault();
 		let data = JSON.stringify(FormDataToJSON(form));
 		console.log(data);
