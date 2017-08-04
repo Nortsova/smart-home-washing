@@ -1,0 +1,49 @@
+doctype html
+html(lang='en')
+	head
+		title Smart-home
+		link(rel='stylesheet' type='text/css' href='/styles/main.css')
+	body
+		div.text-center
+			h1 Hello, SmartHouse
+		div#welc.text-center(style='display:' + welcDivApp)
+			h2#welcUserText #{welcText}
+			button#logOut Log out
+		div#formDiv(style='display:' + formApp)
+			form#nameForm(class='form text-center' action='/' method='post')
+				input#Uname(name='userName' type='text' placeholder='User Name' required)
+				input.btn(type='submit' value='Submit')
+		div.washing
+			div.panel
+				button#modes.switch modes
+				button#onOff.switch(class=switchClass) on/off
+			div#divToOpen.drum(class=drumClass)
+				div.door
+		div#chooseModes(style='display:' + modesDivApp)
+			button#addModeB add a new mode
+			table#modesTable
+				tr
+					th Name
+						
+					th Spin RPM
+						
+
+					th Temperature
+						
+					th 
+		div#addMode(style='display:' + addModeApp)
+			form#addModeF(action='/' method='post')
+				Enter mode name
+				input(type='text' maxlength=15 name='modeName' required)
+				br
+				Choose spin (revolutions per minute)
+				input(type='range' min='300' max='1000' step='100')
+				br
+				Choose temperature
+				input(type='range' min='30' max='90' step='10')
+				br
+				input(type='submit' value='Add')
+
+
+		script(type='text/javascript', src='/scripts/script.js')
+
