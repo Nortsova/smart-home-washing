@@ -8,7 +8,11 @@ let formDiv = document.getElementById('formDiv');
 let chooseModes = document.getElementById('chooseModes');
 let switchModes = document.getElementById('modes');
 let openAddMode = document.getElementById('addModeB');
-let addMode = document.getElementById('addMode');
+let addModeDiv = document.getElementById('addMode');
+let addModeF = document.getElementById('addModeF');
+let modesTable = document.getElementById('modesTable');
+let valSpin = document.getElementById('valSpin');
+let valTemp = document.getElementById('valTemp');
 form.onsubmit = function(e) {
 	e.preventDefault();
 	//alert('try to submit');
@@ -18,7 +22,7 @@ form.onsubmit = function(e) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		method: "PUT",
+		method: 'PUT',
 		body: data
 	})
 	.then((res) => res.json())
@@ -96,19 +100,23 @@ logOut.onclick = function(e) {
 switchModes.onclick = function(e) {
 	e.preventDefault();
 	//alert('sss');
+	//let display = chooseModes.style.display;
 	fetch('/api/getModes', {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
 		method:'GET',
-		//body: JSON.stringify({chooseModes: true})
+		//body: JSON.stringify({display: chooseModes.style.display})
 	})
 	.then((res) => res.json())
 	.then((data) => {
 		if(data.notLogged) {
 			alert('Please, log in to use the device!');
 		} else {
+			if(data.addModeApp) {
+				addMode.style.display = data.addModeApp;
+			}
 			chooseModes.style.display = data.modesDivApp;
 		}
 	})
@@ -120,16 +128,84 @@ openAddMode.onclick = function(e) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		method:'GET',
+		method:'GET'
 		//body: JSON.stringify({chooseModes: true})
 	})
 	.then((res) => res.json())
 	.then((data) => {
 		addMode.style.display = data.addModeApp;
 	})
-
-
 }
+
+addModeF.spin.onchange = function(e) {
+	e.preventDefault();
+	valSpin.innerHTML = addModeF.spin.value;
+}
+
+addModeF.onsubmit = function(e) {
+	e.preventDefault();
+	alert('trying to add mode');
+	let data = JSON.stringify(formDataToJSON(addModeF));
+	fetch('/api/createMode', {
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		method: 'POST',
+		body: data
+	})
+	.then((res) => res.json())
+	.then((data) => {
+		//alert('You added new mode!');
+		let tr;
+		let td;
+		let bIdObj = {
+			'changeMode': 'change Mode',
+			'deleteMode': 'delete Mode'
+		}
+		addModeF.modeName.value = '';
+		tr = document.createElement('tr');
+		let modeObj = data.modes[data.modes.length - 1]
+		for(let key in modeObj) {
+			td = document.createElement('td');
+			td.innerHTML = modeObj[key];
+			tr.appendChild(td);
+		}
+		for(let key in bIdObj) {
+			td = document.createElement('td');
+			let button = document.createElement('button');
+			button.id = key;
+			button.innerHTML = bIdObj[key];
+			td.appendChild(button);
+			tr.appendChild(td);
+		}
+		modesTable.appendChild(tr);
+
+
+		/*for(let i in data.modes) {
+			//console.log(data.modes[i]);
+			tr = document.createElement('tr');
+			for(let key in data.modes[i]) {
+				td = document.createElement('td');
+				td.innerHTML = data.modes[i][key];
+				tr.appendChild(td);
+			}
+			for(let key in bIdObj) {
+				td = document.createElement('td');
+				let button = document.createElement('button');
+				button.id = key;
+				button.innerHTML = bIdObj[key];
+				td.appendChild(button);
+				tr.appendChild(td);
+
+			}
+			
+			modesTable.appendChild(tr);
+
+		}*/
+	})
+}
+
 function formDataToJSON(formElement){    
     var formData = new FormData(formElement), ConvertedJSON= {};
     for (const [key, value]  of formData.entries())

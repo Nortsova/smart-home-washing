@@ -22,28 +22,38 @@ html(lang='en')
 		div#chooseModes(style='display:' + modesDivApp)
 			button#addModeB add a new mode
 			table#modesTable
-				tr
-					th Name
-						
-					th Spin RPM
-						
-
-					th Temperature
-						
-					th 
+				thead
+					tr
+						th Name
+						th Spin RPM
+						th Temperature
+				//tbody
+				-var modeList = modes
+					for mode in modeList
+						tr
+							td=mode.modeName
+							td=mode.spin
+							td=mode.temp
+							td
+								button#changeMode change Mode
+							td
+								button#deleteMode delete Mode 
+				
 		div#addMode(style='display:' + addModeApp)
 			form#addModeF(action='/' method='post')
 				Enter mode name
 				input(type='text' maxlength=15 name='modeName' required)
 				br
 				Choose spin (revolutions per minute)
-				input(type='range' min='300' max='1000' step='100')
+				input(type='range' min='300' max='1000' step='100' name='spin')
+				p#valSpin(style='display:inline-block')
 				br
 				Choose temperature
-				input(type='range' min='30' max='90' step='10')
+				input(type='range' min='30' max='90' step='10' name='temp')
+				p#valTemp(style='display:inline-block')
 				br
 				input(type='submit' value='Add')
 
 
-		script(type='text/javascript', src='/scripts/script.js')
+		script(type='text/javascript' src='/scripts/script.js')
 

@@ -30,14 +30,22 @@ app.get('/', (req, res) => {
 	  		if(!changeL.addModeApp) {
 	  			addModeMenu = 'none';
 	  		}
+	  		let modeArr;
+	  		if(!changeL.modes) {
+	  			modeArr = [];
+	  		} else {
+	  			modeArr = changeL.modes;
+	  		}
 
 	  		res.render('index', {welcDivApp: changeL.welcDivApp,
 	  		 	formApp: changeL.formApp, welcText: changeL.welcText,
 	  			switchClass: swClass, drumClass: drClass,
-	  			modesDivApp: changeL.modesDivApp, addModeApp: addModeMenu})
+	  			modesDivApp: changeL.modesDivApp, addModeApp: addModeMenu,
+	  			modes: modeArr})
 	  	} else {
 	  		res.render('index', {welcDivApp: 'none', formApp: 'block',
-	  			drumClass: 'open', modesDivApp: 'none', addModeApp: 'none'});
+	  			drumClass: 'open', modesDivApp: 'none', addModeApp: 'none',
+	  			modes: []});
 	  	}
   })
 	//res.render('index', {welcomeText: 'HIIII'});
@@ -108,9 +116,17 @@ app.get('/api/getModes', (req, res) => {
 			res.send(JSON.stringify({notLogged: true}));
 		} else {
 			let changeL = info.changeLog;
-			changeL.modesDivApp = 'block';
+			if(changeL.modesDivApp == 'block') {
+				changeL.modesDivApp = 'none';
+				changeL.addModeApp = 'none';
+				res.send({modesDivApp: changeL.modesDivApp,
+					addModeApp: changeL.addModeApp});
+			} else {
+				changeL.modesDivApp = 'block';
+				res.send(JSON.stringify({modesDivApp: changeL.modesDivApp}));
+			}
 			saveChanges(info, callBack());
-			res.send(JSON.stringify({modesDivApp: changeL.modesDivApp}));
+			
 		}	
 	})
 })
@@ -124,6 +140,24 @@ app.get('/api/addModeMenu', (req, res) => {
 		saveChanges(info, callBack());
 		res.send(JSON.stringify({addModeApp: changeL.addModeApp}));
 	})	
+})
+app.post('/api/createMode', (req, res) => {
+	fs.readFile('./data.json', (err, data) => {
+		if(err) console.log(err);
+		info = JSON.parse(data);
+		let changeL = info.changeLog;
+		if(!changeL.modes) {
+			changeL.modes = [];
+		} 
+		let modes = changeL.modes;
+		modes.push({});
+		modes[modes.length - 1].modeName = req.body.modeName;
+		modes[modes.length - 1].spin = req.body.spin;
+		modes[modes.length - 1].temp = req.body.temp;
+	
+		saveChanges(info, callBack());
+		res.send(JSON.stringify({modes: changeL.modes }));
+	})
 })
 function saveChanges(file, callback) {
 	fs.writeFile('./data.json', JSON.stringify(file), callback);
