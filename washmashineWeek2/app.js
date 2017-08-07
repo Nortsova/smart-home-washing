@@ -24,32 +24,33 @@ app.get('/', (req, res) => {
 	  			swClass = changeL.switchClass;
 	  			//drClass = changeL.drumClass;
 	  		} else {
+	  			changeL.drumClass = 'open';
 	  			drClass = changeL.drumClass;
 	  		}
-	  		let addModeMenu;
+	  		//let addModeMenu;
 	  		if(!changeL.addModeApp) {
-	  			addModeMenu = 'none';
-	  		} else {
-	  			addModeMenu = changeL.addModeApp;
-	  		}
+	  			changeL.addModeApp = 'none';
+	  		} 
 	  		let modeArr;
 	  		if(!changeL.modes) {
 	  			modeArr = [];
 	  		} else {
 	  			modeArr = changeL.modes;
 	  		}
-	  		let changeModeMenu;
+	  		//let changeModeMenu;
 	  		if(!changeL.changeModeApp) {
-	  			changeModeMenu = 'none';
-	  		} else {
-	  			changeModeMenu = changeL.changeModeApp;
+	  			changeL.changeModeApp = 'none';
+	  		} 
+	  		
+	  		if(!changeL.modesDivApp) {
+	  			changeL.modesDivApp = 'none';
 	  		}
 
 	  		res.render('index', {welcDivApp: changeL.welcDivApp,
 	  		 	formApp: changeL.formApp, welcText: changeL.welcText,
 	  			switchClass: swClass, drumClass: drClass,
-	  			modesDivApp: changeL.modesDivApp, addModeApp: addModeMenu,
-	  			modes: modeArr, changeModeApp: changeModeMenu,
+	  			modesDivApp: changeL.modesDivApp, addModeApp: changeL.addModeApp,
+	  			modes: modeArr, changeModeApp: changeL.changeModeApp,
 	  			modeProps: changeL.modeProps})
 	  	} else {
 	  		res.render('index', {welcDivApp: 'none', formApp: 'block',
