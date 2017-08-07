@@ -4,7 +4,7 @@ let fs = require('fs');
 let path = require("path");
 let url = require("url");
 let favicon = require('serve-favicon');
-let handlebars = require('handlebars');
+//let handlebars = require('handlebars');
 let app = express();
 app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -29,6 +29,8 @@ app.get('/', (req, res) => {
 	  		let addModeMenu;
 	  		if(!changeL.addModeApp) {
 	  			addModeMenu = 'none';
+	  		} else {
+	  			addModeMenu = changeL.addModeApp;
 	  		}
 	  		let modeArr;
 	  		if(!changeL.modes) {
@@ -36,16 +38,23 @@ app.get('/', (req, res) => {
 	  		} else {
 	  			modeArr = changeL.modes;
 	  		}
+	  		let changeModeMenu;
+	  		if(!changeL.changeModeApp) {
+	  			changeModeMenu = 'none';
+	  		} else {
+	  			changeModeMenu = changeL.changeModeApp;
+	  		}
 
 	  		res.render('index', {welcDivApp: changeL.welcDivApp,
 	  		 	formApp: changeL.formApp, welcText: changeL.welcText,
 	  			switchClass: swClass, drumClass: drClass,
 	  			modesDivApp: changeL.modesDivApp, addModeApp: addModeMenu,
-	  			modes: modeArr})
+	  			modes: modeArr, changeModeApp: changeModeMenu,
+	  			modeProps: changeL.modeProps})
 	  	} else {
 	  		res.render('index', {welcDivApp: 'none', formApp: 'block',
 	  			drumClass: 'open', modesDivApp: 'none', addModeApp: 'none',
-	  			modes: []});
+	  			modes: [], changeModeApp: 'none'});
 	  	}
   })
 	//res.render('index', {welcomeText: 'HIIII'});
@@ -99,6 +108,7 @@ app.get('/logOut', (req, res) => {
 		if(err) console.log(err);
 		info = JSON.parse(data);
 	    info.changeLog = '';
+
 	    
 	    res.send(JSON.stringify({welcDivApp: 'none', formApp: 'block',
 	    modesDivApp: 'none', userName: info.userName, addModeApp: 'none'}));
@@ -137,8 +147,10 @@ app.get('/api/addModeMenu', (req, res) => {
 		info = JSON.parse(data);
 		let changeL = info.changeLog;
 		changeL.addModeApp = 'block';
+		changeL.changeModeApp = 'none';
 		saveChanges(info, callBack());
-		res.send(JSON.stringify({addModeApp: changeL.addModeApp}));
+		res.send(JSON.stringify({addModeApp: changeL.addModeApp,
+			changeModeApp: changeL.changeModeApp}));
 	})	
 })
 app.post('/api/createMode', (req, res) => {
@@ -154,11 +166,97 @@ app.post('/api/createMode', (req, res) => {
 		modes[modes.length - 1].modeName = req.body.modeName;
 		modes[modes.length - 1].spin = req.body.spin;
 		modes[modes.length - 1].temp = req.body.temp;
-	
+		modes[modes.length - 1].id = Math.floor(Math.random() * 1000);
+		changeL.addModeApp = 'none';
+	 
 		saveChanges(info, callBack());
-		res.send(JSON.stringify({modes: changeL.modes }));
+		res.send(JSON.stringify({modes: changeL.modes, addModeApp: changeL.addModeApp }));
+	})
+});
+//let modeToChange;
+app.post('/api/changeModeMenu', (req, res) => {
+	fs.readFile('./data.json', (err, data) => {
+		if(err) console.log(err);
+		info = JSON.parse(data);
+		let changeL = info.changeLog;
+		let modes = changeL.modes;
+		let modeToChange;
+		for(let i = 0; i < modes.length; i++) {
+			if(modes[i].id == req.body.modeId) {
+				modeToChange = modes[i];
+				break;
+			}
+		}
+		console.log(modeToChange);
+		changeL.changeModeApp = 'block';
+		changeL.addModeApp = 'none';
+		let modeProps;
+		if(!changeL.modeProps) {
+			changeL.modeProps = {};
+		}
+		modeProps = changeL.modeProps;
+		modeProps.modeName = modeToChange.modeName;
+		modeProps.spin = modeToChange.spin;
+		modeProps.temp = modeToChange.temp;
+		modeProps.id = modeToChange.id;
+		saveChanges(info, callBack());
+		res.send(JSON.stringify({changeModeApp: changeL.changeModeApp,
+			modeName: modeProps.modeName, spin: modeProps.spin,
+			temp: modeProps.temp, addModeApp: changeL.addModeApp}));
+
 	})
 })
+app.put('/api/changeMode', (req, res) => {
+	fs.readFile('./data.json', (err, data) => {
+		if(err) console.log(err);
+		info = JSON.parse(data);
+		let changeL = info.changeLog;
+		let modes = changeL.modes;
+		let modeProps = changeL.modeProps;
+		let modeToChange;
+		changeL.changeModeApp = 'none';
+		for(let i = 0; i < modes.length; i++) {
+			if(modes[i].id == modeProps.id) {
+				modeToChange = modes[i];
+				break;
+			}
+		}
+		modeToChange.modeName = req.body.modeName;
+		modeToChange.spin = req.body.spin;
+		modeToChange.temp = req.body.temp;
+		saveChanges(info, callBack());
+		res.send(JSON.stringify({changeModeApp: changeL.changeModeApp,
+			modeToChange: modeToChange}))
+
+	})
+})
+
+app.delete('/api/deleteMode', (req, res) => {
+	fs.readFile('./data.json', (err, data) => {
+		if(err) console.log(err);
+		info = JSON.parse(data);
+		let changeL = info.changeLog;
+		let modes = changeL.modes;
+		// modeId;
+		console.log(modes);
+		let index;
+		for(let i = 0; i < modes.length; i++) {
+			if(modes[i].id == req.body.modeId) {
+				console.log(modes[i]);
+				console.log(i);
+				index = i;
+				break;
+			}
+		}
+		modes.splice(index, 1);
+		console.log(modes);
+		saveChanges(info, callBack());
+		res.send(JSON.stringify({success: true}));
+
+
+	})
+})
+
 function saveChanges(file, callback) {
 	fs.writeFile('./data.json', JSON.stringify(file), callback);
 }

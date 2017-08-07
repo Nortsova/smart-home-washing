@@ -27,33 +27,47 @@ html(lang='en')
 						th Name
 						th Spin RPM
 						th Temperature
-				//tbody
-				-var modeList = modes
+				tbody
+					-var modeList = modes
 					for mode in modeList
-						tr
+						tr(id=mode.id)
 							td=mode.modeName
 							td=mode.spin
 							td=mode.temp
 							td
-								button#changeMode change Mode
+								button(onclick='changeMode.call(this)') change Mode
 							td
-								button#deleteMode delete Mode 
+								button(onclick='deleteMode.call(this)') delete Mode 
 				
 		div#addMode(style='display:' + addModeApp)
 			form#addModeF(action='/' method='post')
-				Enter mode name
+				label Enter mode name
 				input(type='text' maxlength=15 name='modeName' required)
 				br
-				Choose spin (revolutions per minute)
+				label Choose spin (revolutions per minute)
 				input(type='range' min='300' max='1000' step='100' name='spin')
 				p#valSpin(style='display:inline-block')
 				br
-				Choose temperature
+				label Choose temperature
 				input(type='range' min='30' max='90' step='10' name='temp')
 				p#valTemp(style='display:inline-block')
 				br
 				input(type='submit' value='Add')
-
+		-var modePr = modeProps || {}
+		div#changeMode(style='display:' + changeModeApp)
+			form#changeModeF(action='/' method='post')
+				label Enter new mode name
+				input(type='text' maxlength=15 name='modeName' value=modePr.modeName required)
+				br
+				label Set new spin value (revolutions per minute)
+				input(type='range' min='300' max='1000' step='100' name='spin' value=modePr.spin)
+				p#valSpin(style='display:inline-block')
+				br
+				label Set new temperature
+				input(type='range' min='30' max='90' step='10' name='temp' value=modePr.temp)
+				p#valTemp(style='display:inline-block')
+				br
+				input(type='submit' value='Change Mode')
 
 		script(type='text/javascript' src='/scripts/script.js')
 
