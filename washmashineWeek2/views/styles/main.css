@@ -1,8 +1,6 @@
 body {
 	background-color: #e6e6e6;
 }
-
-
 .washing {
 	width: 500px;
 	height: 500px;
@@ -35,11 +33,9 @@ body {
 	position:relative;
 	/*text-align: center;*/
 	margin:auto;
-
 }
 #logOut {
 	padding: 4px;
-	
 	position: absolute;
 	right: 0px;
 	top: 0px;
@@ -80,7 +76,6 @@ body {
 .drum.open .door {
 	transform: translateX(-100%);
 }
-
 .text-center {
 	text-align: center;
 }
@@ -99,19 +94,15 @@ body {
 	font-size: 1.1em;
 	color: #fff;
 }
-
 .modesTable {
 	margin: auto;
 	border-collapse: collapse;
 	border: 2px solid #333;
 }
-
 .modesTable th {
 	margin: 5px;
 	padding: 3px;
-	
 }
-
 .choose-outer,
 .addmode-outer,
 .changemode-outer {
@@ -125,7 +116,6 @@ body {
 	justify-content: center;
 	align-items: center;
 }
-
 .choose-outer {
 	z-index: 2;
 }
@@ -151,8 +141,6 @@ body {
 .choose table tbody tr:nth-child(2n+1) {
 	background-color: rgba(255,255,255, .3);
 }
-
-
 button {
 	padding: 4px 9px;
 	font-size: 14px;
@@ -165,25 +153,22 @@ button {
     background-color: #26a69a;
 	text-align: center;
 	border-radius: 2px;
-	    -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
-	    transition: .3s ease-out;
+	transition: .3s ease-out;
 }
-
 button:hover,
 button:active {
-	    background-color: #2bbbad;
+	background-color: #2bbbad;
 }
-
 button.red {
 	background-color: #F44336;
 }
 button.red:hover,
 button.red:active {
-	    background-color: #f7695f;
+	background-color: #f7695f;
 }
-
-input {
+input[type='text'] {
 	border-radius: 2px;
 	background-color: #fff;
 	color: #000;

@@ -44,7 +44,7 @@ html(lang='en')
 		div.addmode#addMode(style='display:' + addModeApp)
 			div.addmode-outer
 				div.addmode-inner
-					form#addModeF(action='/' method='post')
+					form#addModeForm(action='/' method='post')
 						label Enter mode name
 						input(type='text' maxlength=15 name='modeName' required)
 						br
@@ -69,9 +69,7 @@ html(lang='en')
 						br
 						label Set new temperature
 						input(type='range' min='30' max='90' step='10' name='temp' value=modePr.temp)
-						
 						br
 						button(type='submit') Save
-
 		script(type='text/javascript' src='/scripts/script.js')
 
