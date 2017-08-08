@@ -95,7 +95,9 @@ logOut.onclick = function(e) {
 	.then((data) => {
 		alert('Bye, ' + data.userName);
 		let tbody = document.getElementsByTagName('tbody')[0];
-		modesTable.removeChild(tbody);
+		if(tbody) {
+			modesTable.removeChild(tbody);
+		}
 		welcDiv.style.display = data.welcDivApp;
 		wText.innerHTML = '';
 		formDiv.style.display = data.formApp;
