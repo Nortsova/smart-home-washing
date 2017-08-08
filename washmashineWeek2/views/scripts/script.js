@@ -13,8 +13,8 @@ let openAddMode = document.getElementById('addModeB');
 let addModeDiv = document.getElementById('addMode');
 let addModeF = document.getElementById('addModeF');
 let modesTable = document.getElementById('modesTable');
-let valSpin = document.getElementById('valSpin');
-let valTemp = document.getElementById('valTemp');
+//let valSpin = document.getElementById('valSpin');
+//let valTemp = document.getElementById('valTemp');
 //let openChangeMode = document.getElementById('');
 let changeModeDiv = document.getElementById('changeMode');
 let changeModeF = document.getElementById('changeModeF');
@@ -101,8 +101,25 @@ logOut.onclick = function(e) {
 		formDiv.style.display = data.formApp;
 		chooseModes.style.display = data.modesDivApp;
 		addModeDiv.style.display = data.addModeApp;
+		changeModeDiv.style.display = data.changeModeApp;
 	})
 }
+
+/*button.onclick = function(e) {
+	e.preventDefault();
+	fetch('/api/closeCreateMode', {
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		method:'GET',
+		//body: JSON.stringify({display: chooseModes.style.display})
+	})
+	.then((res) => res.json())
+	.then((data) => {
+		addModeDiv.style.display = data.addModeApp;
+	});
+}*/
 
 switchModes.onclick = function(e) {
 	e.preventDefault();
@@ -180,14 +197,14 @@ openAddMode.onclick = function(e) {
 	})
 }
 
-addModeF.spin.onchange = function(e) {
+/*addModeF.spin.onchange = function(e) {
 	e.preventDefault();
 	valSpin.innerHTML = addModeF.spin.value;
 }
 addModeF.temp.onchange = function(e) {
 	e.preventDefault();
 	valTemp.innerHTML = addModeF.temp.value;
-}
+}*/
 /*changeModeF.spin.onchange = function(e) {
 	e.preventDefault();
 	valSpin.innerHTML = changeModeF.spin.value;
@@ -285,13 +302,13 @@ function deleteMode() {
 }
 function changeMode() {
 	let modeId = this.parentNode.parentNode.id;
-	fetch('/api/changeModeMenu', {
+	fetch('/api/changeModeMenu?modeId=' + modeId, {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		method:'POST',
-		body: JSON.stringify({modeId: modeId})
+		method:'GET',
+		//body: JSON.stringify({modeId: modeId})
 	})
 	.then((res) => res.json())
 	.then((data) => {
@@ -330,27 +347,6 @@ changeModeF.onsubmit = function(e) {
 
 	})
 }
-/*function check() {
-	alert('fff');
-}*/
-/*openChangeMode.onclick = function(e) {
-	e.preventDefault();
-
-	fetch('/api/changeModeMenu', {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		method:'POST',
-		body: JSON.stringify({chooseModes: true})
-	})
-	.then((res) => res.json())
-	.then((data) => {
-		addMode.style.display = data.addModeApp;
-	})
-}*/
-
-
 
 function formDataToJSON(formElement){    
     var formData = new FormData(formElement), ConvertedJSON= {};
