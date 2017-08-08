@@ -7,6 +7,8 @@ let logOut = document.getElementById('logOut');
 let formDiv = document.getElementById('formDiv');
 let chooseModes = document.getElementById('chooseModes');
 let switchModes = document.getElementById('modes');
+let addModeClose = document.getElementById('addModeClose');
+let closeAddModeForm = document.getElementById('closeAddModeForm');
 let openAddMode = document.getElementById('addModeB');
 let addModeDiv = document.getElementById('addMode');
 let addModeF = document.getElementById('addModeF');
@@ -126,6 +128,41 @@ switchModes.onclick = function(e) {
 		}
 	})
 }
+addModeClose.onclick = function(e) {
+	e.preventDefault();
+	fetch('/api/getModes', {
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		method:'GET',
+		//body: JSON.stringify({display: chooseModes.style.display})
+	})
+	.then((res) => res.json())
+	.then((data) => {
+		
+		if(data.addModeApp) {
+			addModeDiv.style.display = data.addModeApp;
+		}
+		chooseModes.style.display = data.modesDivApp;
+	
+	})
+};
+closeAddModeForm.onclick = function(e) {
+    e.preventDefault();
+    fetch('/api/closeCreateMode', {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method:'GET',
+        //body: JSON.stringify({display: chooseModes.style.display})
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        addModeDiv.style.display = data.addModeApp;
+    });
+}
 openAddMode.onclick = function(e) {
 	e.preventDefault();
 	fetch('/api/addModeMenu', {
@@ -220,6 +257,7 @@ addModeF.onsubmit = function(e) {
 		let lastDeleteModeButton = deleteModeButtons[deleteModeButtons.length - 1];
 		lastDeleteModeButton.addEventListener('click',
 			deleteMode, false);
+			lastDeleteModeButton.classList.add("red");
 		addModeDiv.style.display = data.addModeApp;
 	})
 }

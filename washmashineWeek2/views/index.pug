@@ -6,7 +6,7 @@ html(lang='en')
 	body
 		div.text-center
 			h1 Hello, SmartHouse
-		div#welc.text-center(style='display:' + welcDivApp)
+		div#welc.welcome.text-center(style='display:' + welcDivApp)
 			h2#welcUserText #{welcText}
 			button#logOut Log out
 		div#formDiv(style='display:' + formApp)
@@ -19,55 +19,62 @@ html(lang='en')
 				button#onOff.switch(class=switchClass) on/off
 			div#divToOpen.drum(class=drumClass)
 				div.door
-		div#chooseModes(style='display:' + modesDivApp)
-			button#addModeB add a new mode
-			table#modesTable
-				thead
-					tr
-						th Name
-						th Spin RPM
-						th Temperature
-				tbody
-					-var modeList = modes
-					for mode in modeList
-						tr(id=mode.id)
-							td=mode.modeName
-							td=mode.spin
-							td=mode.temp
-							td
-								button(onclick='changeMode.call(this)') change Mode
-							td
-								button(onclick='deleteMode.call(this)') delete Mode 
-				
-		div#addMode(style='display:' + addModeApp)
-			form#addModeF(action='/' method='post')
-				label Enter mode name
-				input(type='text' maxlength=15 name='modeName' required)
-				br
-				label Choose spin (revolutions per minute)
-				input(type='range' min='300' max='1000' step='100' name='spin')
-				p#valSpin(style='display:inline-block')
-				br
-				label Choose temperature
-				input(type='range' min='30' max='90' step='10' name='temp')
-				p#valTemp(style='display:inline-block')
-				br
-				input(type='submit' value='Add')
+		div.choose#chooseModes(style='display:' + modesDivApp)
+			div.choose-outer
+				div.choose-inner
+					button#addModeB add a new mode
+					button.red#addModeClose close
+					table#modesTable
+						thead
+							tr
+								th Name
+								th Spin RPM
+								th Temperature
+						tbody
+							-var modeList = modes
+							for mode in modeList
+								tr(id=mode.id)
+									td=mode.modeName
+									td=mode.spin
+									td=mode.temp
+									td
+										button(onclick='changeMode.call(this)') change Mode
+									td
+										button.red(onclick='deleteMode.call(this)') delete Mode 
+		div.addmode#addMode(style='display:' + addModeApp)
+			div.addmode-outer
+				div.addmode-inner
+					form#addModeF(action='/' method='post')
+						label Enter mode name
+						input(type='text' maxlength=15 name='modeName' required)
+						br
+						label Choose spin (revolutions per minute)
+						input(type='range' min='300' max='1000' step='100' name='spin')
+						p#valSpin(style='display:inline-block')
+						br
+						label Choose temperature
+						input(type='range' min='30' max='90' step='10' name='temp')
+						p#valTemp(style='display:inline-block')
+						br
+						button(type='submit') Add
+						button.close#closeAddModeForm(type='submit') Close
 		-var modePr = modeProps || {}
-		div#changeMode(style='display:' + changeModeApp)
-			form#changeModeF(action='/' method='post')
-				label Enter new mode name
-				input(type='text' maxlength=15 name='modeName' value=modePr.modeName required)
-				br
-				label Set new spin value (revolutions per minute)
-				input(type='range' min='300' max='1000' step='100' name='spin' value=modePr.spin)
-				p#valSpin(style='display:inline-block')
-				br
-				label Set new temperature
-				input(type='range' min='30' max='90' step='10' name='temp' value=modePr.temp)
-				p#valTemp(style='display:inline-block')
-				br
-				input(type='submit' value='Change Mode')
+		div.changemode#changeMode(style='display:' + changeModeApp)
+			div.changemode-outer
+				div.changemode-inner
+					form#changeModeF(action='/' method='post')
+						label Enter new mode name
+						input(type='text' maxlength=15 name='modeName' value=modePr.modeName required)
+						br
+						label Set new spin value (revolutions per minute)
+						input(type='range' min='300' max='1000' step='100' name='spin' value=modePr.spin)
+						p#valSpin(style='display:inline-block')
+						br
+						label Set new temperature
+						input(type='range' min='30' max='90' step='10' name='temp' value=modePr.temp)
+						p#valTemp(style='display:inline-block')
+						br
+						button(type='submit') Save
 
 		script(type='text/javascript' src='/scripts/script.js')
 

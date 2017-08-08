@@ -174,6 +174,17 @@ app.post('/api/createMode', (req, res) => {
 		res.send(JSON.stringify({modes: changeL.modes, addModeApp: changeL.addModeApp }));
 	})
 });
+
+app.get('/api/closeCreateMode', (req, res) => {
+    fs.readFile('./data.json', (err, data) => {
+        if(err) console.log(err);
+        info = JSON.parse(data);
+        let changeL = info.changeLog;
+        changeL.addModeApp = 'none';
+        saveChanges(info, callBack());
+		res.send(JSON.stringify({addModeApp: changeL.addModeApp}));
+	})
+})
 //let modeToChange;
 app.post('/api/changeModeMenu', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
