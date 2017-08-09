@@ -4,7 +4,6 @@ let fs = require('fs');
 let path = require("path");
 let url = require("url");
 let favicon = require('serve-favicon');
-//let handlebars = require('handlebars');
 let app = express();
 app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -57,16 +56,14 @@ app.get('/', (req, res) => {
 				modes: [], changeModeApp: 'none'
 			});
 		}
-	})
-})
+	});
+});
 
 app.put('/logIn', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
 		if (err) console.log(err);
 		info = JSON.parse(data);
-		//console.log(info);
 		if (info.ok) {
-			console.log("server ok!");
 			info.changeLog = {};
 			let changeL = info.changeLog;
 			changeL.welcText = 'Welcome ' + req.body.userName;
@@ -78,9 +75,9 @@ app.put('/logIn', (req, res) => {
 				welcText: changeL.welcText,
 				formApp: changeL.formApp, welcDivApp: changeL.welcDivApp
 			}));
-		};
-	})
-})
+		}
+	});
+});
 
 app.put('/switchDevice', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
@@ -106,15 +103,14 @@ app.put('/switchDevice', (req, res) => {
 				drumClass: changeL.drumClass, open: classOpen, on: classOn
 			}));
 		}
-	})
-})
+	});
+});
 
 app.get('/logOut', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
 		if (err) console.log(err);
 		info = JSON.parse(data);
 		info.changeLog = '';
-
 		res.send(JSON.stringify({
 			welcDivApp: 'none', formApp: 'block',
 			modesDivApp: 'none', userName: info.userName, addModeApp: 'none',
@@ -122,8 +118,8 @@ app.get('/logOut', (req, res) => {
 		}));
 		info.userName = '';
 		saveChanges(info, callBack());
-	})
-})
+	});
+});
 
 app.get('/api/getModes', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
@@ -146,8 +142,8 @@ app.get('/api/getModes', (req, res) => {
 			}
 			saveChanges(info, callBack());
 		}
-	})
-})
+	});
+});
 
 app.get('/api/addModeMenu', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
@@ -161,8 +157,9 @@ app.get('/api/addModeMenu', (req, res) => {
 			addModeApp: changeL.addModeApp,
 			changeModeApp: changeL.changeModeApp
 		}));
-	})
-})
+	});
+});
+
 app.post('/api/createMode', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
 		if (err) console.log(err);
@@ -178,10 +175,9 @@ app.post('/api/createMode', (req, res) => {
 		modes[modes.length - 1].temp = req.body.temp;
 		modes[modes.length - 1].id = Math.floor(Math.random() * 1000);
 		changeL.addModeApp = 'none';
-
 		saveChanges(info, callBack());
 		res.send(JSON.stringify({ modes: changeL.modes, addModeApp: changeL.addModeApp }));
-	})
+	});
 });
 
 app.get('/api/closeCreateMode', (req, res) => {
@@ -192,8 +188,8 @@ app.get('/api/closeCreateMode', (req, res) => {
 		changeL.addModeApp = 'none';
 		saveChanges(info, callBack());
 		res.send(JSON.stringify({ addModeApp: changeL.addModeApp }));
-	})
-})
+	});
+});
 
 app.get('/api/changeModeMenu', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
@@ -208,7 +204,6 @@ app.get('/api/changeModeMenu', (req, res) => {
 				break;
 			}
 		}
-		//console.log(modeToChange);
 		changeL.changeModeApp = 'block';
 		changeL.addModeApp = 'none';
 		let modeProps;
@@ -226,8 +221,8 @@ app.get('/api/changeModeMenu', (req, res) => {
 			modeName: modeProps.modeName, spin: modeProps.spin,
 			temp: modeProps.temp, addModeApp: changeL.addModeApp
 		}));
-	})
-})
+	});
+});
 
 app.put('/api/changeMode', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
@@ -251,9 +246,9 @@ app.put('/api/changeMode', (req, res) => {
 		res.send(JSON.stringify({
 			changeModeApp: changeL.changeModeApp,
 			modeToChange: modeToChange
-		}))
-	})
-})
+		}));
+	});
+});
 
 app.delete('/api/deleteMode', (req, res) => {
 	fs.readFile('./data.json', (err, data) => {
@@ -261,23 +256,18 @@ app.delete('/api/deleteMode', (req, res) => {
 		info = JSON.parse(data);
 		let changeL = info.changeLog;
 		let modes = changeL.modes;
-		//modeId;
-		// console.log(modes);
 		let index;
 		for (let i = 0; i < modes.length; i++) {
 			if (modes[i].id == req.body.modeId) {
-				// console.log(modes[i]);
-				// console.log(i);
 				index = i;
 				break;
 			}
 		}
 		modes.splice(index, 1);
-		//console.log(modes);
 		saveChanges(info, callBack());
 		res.send(JSON.stringify({ success: true }));
-	})
-})
+	});
+});
 
 function saveChanges(file, callback) {
 	fs.writeFile('./data.json', JSON.stringify(file), callback);
